@@ -9,7 +9,7 @@
 # Created by Geir Isene <g@isene.com> in 2020 and released into Public Domain.
 
 class String
-  def colorize(color_code)
+  def colorize(color_code) # This is for general terminal output - doesn't work inside mutt
     "\e[#{color_code}m#{self}\e[0m"
   end
 
