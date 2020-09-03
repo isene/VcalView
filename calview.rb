@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+# This is a simple script that takes vcal attachments and displays them in
+# pure text. This is suitable for displaying callendar invitations in mutt.
+# 
+# Add this to your to your .mailcap:
+# text/calendar; /<pathto>/calview.rb '%s'; copiousoutput
+#
+# Created by Geir Isene <g@isene.com> in 2020 and released into Public Domain.
+
+vcal  = ARGF.read
+tz    = vcal[ /^TZID:(.*)/, 1 ]
+
+if vcal.match( /TZID/ ) # Newer vcal
+  # Get the dates
+  sdate = vcal[ /^DTSTART;TZID=.*:(.*)T/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
+  edate = vcal[ /^DTEND;TZID=.*:(.*)T/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
+  # Get the times
+  stime = vcal[ /^DTSTART;TZID=.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
+  etime = vcal[ /^DTEND;TZID=.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
+  # Get organizer
+  org   = vcal[ /^ORGANIZER;CN=(.*)/, 1 ].sub( /:mailto:/, ' <') + ">"
+  # Get description
+  desc  = vcal[ /^DESCRIPTION;.*?:(.*)^UID/m, 1 ].gsub( /\n /, '' ).gsub( /\\n/, "\n" ).gsub( /\n\n+/, "\n" ).gsub( / \| /, "\n" ).sub( /^\n/, '' )
+else                    # Older vcal
+  # Get the dates
+  sdate = vcal[ /^DTSTART:(.*)T/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
+  edate = vcal[ /^DTEND:(.*)T/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
+  # Get the times
+  stime = vcal[ /^DTSTART.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
+  etime = vcal[ /^DTEND.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
+  # Get organizer
+  org   = vcal[ /^ORGANIZER:(.*)/, 1 ].sub( /MAILTO:/, ' <') + ">"
+  # Get description
+  desc  = vcal[ /^DESCRIPTION:(.*)^SUMMARY/m, 1 ].gsub( /\n /, '' ).gsub( /\\n/, "\n" ).gsub( /\n\n+/, "\n" ).gsub( / \| /, "\n" ).sub( /^\n/, '' )
+end
+
+sdate == edate ? dates = sdate : dates = sdate + " - " + edate
+stime == etime ? times = stime : times = stime + " - " + etime
+# Get participants
+part  = vcal.scan( /^ATTENDEE.*CN=([\s\S]*?@.*)\n/ ).join('%').gsub( /\n /, '').gsub( /%/, ">\n   " ).gsub( /:mailto:/, " <" )
+part  = "   " + part + ">" if part != ""
+# Get summary and description
+sum   = vcal[ /^SUMMARY;.*:(.*)/, 1 ]
+sum   = vcal[ /^SUMMARY:(.*)/, 1 ] if sum == nil
+
+# Print the result in a tidy fashion
+puts "WHAT: " + sum
+puts "WHEN: " + dates + ", " + times
+puts ""
+puts "ORGANIZER: " + org
+puts "PARTICIPANTS:", part
+puts ""
+puts "DESCRIPTION:", desc
