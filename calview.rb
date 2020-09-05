@@ -28,9 +28,8 @@ class String
 end
 
 vcal  = ARGF.read
-tz    = vcal[ /^TZID:(.*)/, 1 ]
 
-if vcal.match( /TZID/ ) # Newer vcal
+if vcal.match( /^DTSTART;TZID/ ) # Newer vcal
   # Get the dates
   sdate = vcal[ /^DTSTART;TZID=.*:(.*)T/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
   edate = vcal[ /^DTEND;TZID=.*:(.*)T/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
