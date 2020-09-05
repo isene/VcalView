@@ -37,9 +37,13 @@ if vcal.match( /^DTSTART;TZID/ ) # Newer vcal
   stime = vcal[ /^DTSTART;TZID=.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
   etime = vcal[ /^DTEND;TZID=.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
   # Get organizer
-  org   = vcal[ /^ORGANIZER;CN=(.*)/, 1 ].sub( /:mailto:/, ' <') + ">"
+  org   = vcal[ /^ORGANIZER;CN=(.*)/, 1 ].sub( /:mailto:/i, ' <') + ">"
   # Get description
-  desc  = vcal[ /^DESCRIPTION;.*?:(.*)^UID/m, 1 ].gsub( /\n /, '' ).gsub( /\\n/, "\n" ).gsub( /\n\n+/, "\n" ).gsub( / \| /, "\n" ).sub( /^\n/, '' )
+  begin
+    desc  = vcal[ /^DESCRIPTION;.*?:(.*)^UID/m, 1 ].gsub( /\n /, '' ).gsub( /\\n/, "\n" ).gsub( /\n\n+/, "\n" ).gsub( / \| /, "\n" ).sub( /^\n/, '' )
+  rescue
+    desc  = ""
+  end
 else                    # Older vcal
   # Get the dates
   sdate = vcal[ /^DTSTART:(.*)T/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
@@ -48,15 +52,19 @@ else                    # Older vcal
   stime = vcal[ /^DTSTART.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
   etime = vcal[ /^DTEND.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
   # Get organizer
-  org   = vcal[ /^ORGANIZER:(.*)/, 1 ].sub( /MAILTO:/, ' <') + ">"
+  org   = vcal[ /^ORGANIZER:(.*)/, 1 ].sub( /MAILTO:/i, ' <') + ">"
   # Get description
-  desc  = vcal[ /^DESCRIPTION:(.*)^SUMMARY/m, 1 ].gsub( /\n /, '' ).gsub( /\\n/, "\n" ).gsub( /\n\n+/, "\n" ).gsub( / \| /, "\n" ).sub( /^\n/, '' )
+  begin
+    desc  = vcal[ /^DESCRIPTION:(.*)^SUMMARY/m, 1 ].gsub( /\n /, '' ).gsub( /\\n/, "\n" ).gsub( /\n\n+/, "\n" ).gsub( / \| /, "\n" ).sub( /^\n/, '' )
+  rescue
+    desc  = ""
+  end
 end
 
 sdate == edate ? dates = sdate : dates = sdate + " - " + edate
 stime == etime ? times = stime : times = stime + " - " + etime
 # Get participants
-part  = vcal.scan( /^ATTENDEE.*CN=([\s\S]*?@.*)\n/ ).join('%').gsub( /\n /, '').gsub( /%/, ">\n   " ).gsub( /:mailto:/, " <" )
+part  = vcal.scan( /^ATTENDEE.*CN=([\s\S]*?@.*)\n/ ).join('%').gsub( /\n /, '').gsub( /%/, ">\n   " ).gsub( /:mailto:/i, " <" )
 part  = "   " + part + ">" if part != ""
 # Get summary and description
 sum   = vcal[ /^SUMMARY;.*:(.*)/, 1 ]
