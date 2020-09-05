@@ -29,31 +29,39 @@ end
 
 vcal  = ARGF.read
 
-if vcal.match( /^DTSTART;TZID/ ) # Newer vcal
-  # Get the dates
+# Get dates and times
+if vcal.match( /^DTSTART;TZID=/ )
   sdate = vcal[ /^DTSTART;TZID=.*:(.*)T/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
   edate = vcal[ /^DTEND;TZID=.*:(.*)T/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
-  # Get the times
   stime = vcal[ /^DTSTART;TZID=.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
   etime = vcal[ /^DTEND;TZID=.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
-  # Get organizer
-  org   = vcal[ /^ORGANIZER;CN=(.*)/, 1 ].sub( /:mailto:/i, ' <') + ">"
-  # Get description
+elsif vcal.match( /DTSTART;VALUE=DATE:/ )
+  sdate = vcal[ /^DTSTART;VALUE=DATE:(.*)/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
+  edate = vcal[ /^DTEND;VALUE=DATE:(.*)/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
+  stime = vcal[ /^DTSTART.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
   begin
-    desc  = vcal[ /^DESCRIPTION;.*?:(.*)^UID/m, 1 ].gsub( /\n /, '' ).gsub( /\\n/, "\n" ).gsub( /\n\n+/, "\n" ).gsub( / \| /, "\n" ).sub( /^\n/, '' )
+    etime = vcal[ /^DTEND.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
   rescue
-    desc  = ""
+    etime = stime
   end
-else                    # Older vcal
-  # Get the dates
+else
   sdate = vcal[ /^DTSTART:(.*)T/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
   edate = vcal[ /^DTEND:(.*)T/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
-  # Get the times
   stime = vcal[ /^DTSTART.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
   etime = vcal[ /^DTEND.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
-  # Get organizer
+end
+
+# Get organizer
+if vcal.match( /^ORGANIZER;CN=/ )
+  org   = vcal[ /^ORGANIZER;CN=(.*)/, 1 ].sub( /:mailto:/i, ' <') + ">"
+else
   org   = vcal[ /^ORGANIZER:(.*)/, 1 ].sub( /MAILTO:/i, ' <') + ">"
-  # Get description
+end
+
+# Get description
+if vcal.match( /^DESCRIPTION;.*?:(.*)^UID/m )
+  desc  = vcal[ /^DESCRIPTION;.*?:(.*)^UID/m, 1 ].gsub( /\n /, '' ).gsub( /\\n/, "\n" ).gsub( /\n\n+/, "\n" ).gsub( / \| /, "\n" ).sub( /^\n/, '' )
+else
   begin
     desc  = vcal[ /^DESCRIPTION:(.*)^SUMMARY/m, 1 ].gsub( /\n /, '' ).gsub( /\\n/, "\n" ).gsub( /\n\n+/, "\n" ).gsub( / \| /, "\n" ).sub( /^\n/, '' )
   rescue
