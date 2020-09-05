@@ -1,6 +1,6 @@
 # VcalView
 
-VCAL viewer for MUTT
+VCAL viewer for MUTT (can also be used to view a vcal file in a terminal)
 
 Having used the [vcal2text](https://github.com/davebiffuk/vcal2text) for many
 years to view calendar invites in my mutt e-mail client, it started to fail on
@@ -19,6 +19,10 @@ text/calendar; /<pathto>/calview.rb '%s'; copiousoutput
 ```
 
 ...and mutt will neatly display your calendar invites.
+
+This script can also be used to view a vcal file in a terminal simlpy by
+issuing the command `calview.rb vcalfile`.
+
 
 PS: If you encounter any issies or errors, I will gladly fix them Just open an
 issue in this repo and I will get to work.
