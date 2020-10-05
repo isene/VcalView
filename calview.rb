@@ -8,25 +8,6 @@
 #
 # Created by Geir Isene <g@isene.com> in 2020 and released into Public Domain.
 
-class String
-  def colorize(color_code) # This is for general terminal output - doesn't work inside mutt
-    "\e[#{color_code}m#{self}\e[0m"
-  end
-
-  def red
-    colorize(31)
-  end
-  def green
-    colorize(32)
-  end
-  def yellow
-    colorize(33)
-  end
-  def blue
-    colorize(34)
-  end
-end
-
 vcal  = ARGF.read
 
 # Get dates and times
@@ -79,8 +60,8 @@ sum   = vcal[ /^SUMMARY;.*:(.*)/, 1 ]
 sum   = vcal[ /^SUMMARY:(.*)/, 1 ] if sum == nil
 
 # Print the result in a tidy fashion
-puts "WHAT: " + (sum).yellow
-puts "WHEN: " + (dates + ", " + times).green
+puts "WHAT: " + (sum)
+puts "WHEN: " + (dates + ", " + times)
 puts ""
 puts "ORGANIZER: " + org
 puts "PARTICIPANTS:", part
