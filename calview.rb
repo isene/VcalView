@@ -8,6 +8,8 @@
 #
 # Created by Geir Isene <g@isene.com> in 2020 and released into Public Domain.
 
+require "date"
+
 vcal  = ARGF.read
 
 # Get dates and times
@@ -51,6 +53,9 @@ else
 end
 
 sdate == edate ? dates = sdate : dates = sdate + " - " + edate
+dobj = DateTime.parse( sdate )
+wday = dobj.strftime('%A')
+week = dobj.strftime('%-V')
 stime == etime ? times = stime : times = stime + " - " + etime
 # Get participants
 part  = vcal.scan( /^ATTENDEE.*CN=([\s\S]*?@.*)\n/ ).join('%').gsub( /\n /, '').gsub( /%/, ">\n   " ).gsub( /:mailto:/i, " <" )
@@ -61,7 +66,7 @@ sum   = vcal[ /^SUMMARY:(.*)/, 1 ] if sum == nil
 
 # Print the result in a tidy fashion
 puts "WHAT: " + (sum)
-puts "WHEN: " + (dates + ", " + times)
+puts "WHEN: " + (dates + " (" + wday + " of week " + week + "), " + times)
 puts ""
 puts "ORGANIZER: " + org
 puts "PARTICIPANTS:", part
