@@ -38,7 +38,11 @@ end
 if vcal.match( /^ORGANIZER;CN=/ )
   org   = vcal[ /^ORGANIZER;CN=(.*)/, 1 ].sub( /:mailto:/i, ' <') + ">"
 else
-  org   = vcal[ /^ORGANIZER:(.*)/, 1 ].sub( /MAILTO:/i, ' <') + ">"
+  begin
+    org = vcal[ /^ORGANIZER:(.*)/, 1 ].sub( /MAILTO:/i, ' <') + ">"
+  rescue
+    org = "(None set)"
+  end
 end
 
 # Get description
@@ -57,6 +61,7 @@ dobj = DateTime.parse( sdate )
 wday = dobj.strftime('%A')
 week = dobj.strftime('%-V')
 stime == etime ? times = stime : times = stime + " - " + etime
+times += " (GST)" if vcal.match( /DTSTART;TZID=Greenwich Standard Time/ )
 # Get participants
 part  = vcal.scan( /^ATTENDEE.*CN=([\s\S]*?@.*)\n/ ).join('%').gsub( /\n /, '').gsub( /%/, ">\n   " ).gsub( /:mailto:/i, " <" )
 part  = "   " + part + ">" if part != ""
