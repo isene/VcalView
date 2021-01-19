@@ -12,6 +12,9 @@ require "date"
 
 vcal  = ARGF.read
 
+# Fix multiline participants
+vcal.gsub!( /(^ATTENDEE.*)\n^ (.*)/, '\1\2' )
+
 # Get dates and times
 if vcal.match( /^DTSTART;TZID=/ )
   sdate = vcal[ /^DTSTART;TZID=.*:(.*)T/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
