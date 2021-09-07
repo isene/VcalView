@@ -37,6 +37,12 @@ else
   etime = vcal[ /^DTEND.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
 end
 
+# Adjust for local TZ offset
+unless vcal.match( /^TZOFFSET/ )
+  stime = (stime.to_i + Time.now.getlocal.utc_offset / 3600).to_s + stime.sub( /\d\d/, '')
+  etime = (etime.to_i + Time.now.getlocal.utc_offset / 3600).to_s + etime.sub( /\d\d/, '')
+end
+
 # Get organizer
 if vcal.match( /^ORGANIZER;CN=/ )
   org   = vcal[ /^ORGANIZER;CN=(.*)/, 1 ].sub( /:mailto:/i, ' <') + ">"
