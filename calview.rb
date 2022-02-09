@@ -24,7 +24,11 @@ if vcal.match( /^DTSTART;TZID=/ )
 elsif vcal.match( /DTSTART;VALUE=DATE:/ )
   sdate = vcal[ /^DTSTART;VALUE=DATE:(.*)/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
   edate = vcal[ /^DTEND;VALUE=DATE:(.*)/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
-  stime = vcal[ /^DTSTART.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
+  begin
+    stime = vcal[ /^DTSTART.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
+  rescue
+    stime = "All day"
+  end
   begin
     etime = vcal[ /^DTEND.*T(\d\d\d\d)/, 1 ].sub( /(\d\d)(\d\d)/, '\1:\2')
   rescue
@@ -39,8 +43,8 @@ end
 
 # Adjust for local TZ offset
 unless vcal.match( /^TZOFFSET/ )
-  stime = (stime.to_i + Time.now.getlocal.utc_offset / 3600).to_s + stime.sub( /\d\d/, '')
-  etime = (etime.to_i + Time.now.getlocal.utc_offset / 3600).to_s + etime.sub( /\d\d/, '')
+  stime = (stime.to_i + Time.now.getlocal.utc_offset / 3600).to_s + stime.sub( /\d\d/, '') unless stime == "All day"
+  etime = (etime.to_i + Time.now.getlocal.utc_offset / 3600).to_s + etime.sub( /\d\d/, '') unless stime == "All day"
 end
 
 # Get organizer
