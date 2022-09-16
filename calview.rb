@@ -8,7 +8,7 @@
 #
 # Created by Geir Isene <g@isene.com> in 2020 and released into Public Domain.
 
-require "date"
+require "time"
 
 vcal  = ARGF.read
 
@@ -70,7 +70,7 @@ else
 end
 
 sdate == edate ? dates = sdate : dates = sdate + " - " + edate
-dobj = DateTime.parse( sdate )
+dobj = Time.parse( sdate )
 wday = dobj.strftime('%A')
 week = dobj.strftime('%-V')
 stime == etime ? times = stime : times = stime + " - " + etime
