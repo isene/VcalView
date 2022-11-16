@@ -9,6 +9,8 @@ lots of errors beyond that. As it is written in perl and carries a bundle of
 dependencies, I decided to create my own in Ruby without dependencies. This
 solution is leaner (and meaner), and it works.
 
+To use this solution, run `gem install tzinfo` first.
+
 Simply copy `calview.rb` to a suitable place for execution (like your ~/bin
 directory) and ensure it is executable (as with `chown 755`).
 
