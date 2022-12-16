@@ -195,7 +195,7 @@ sdate == edate ? dates = sdate : dates = sdate + " - " + edate
 dobj = Time.parse( sdate )
 wday = dobj.strftime('%A')
 week = dobj.strftime('%-V')
-stime == etime ? times = stime : times = stime.strftime("%H:%M") + " - " + etime.strftime("%H:%M")
+stime == etime or stime == stime.to_s ? times = stime : times = stime.strftime("%H:%M") + " - " + etime.strftime("%H:%M")
 # Get participants
 part  = vcal.scan( /^ATTENDEE.*CN=([\s\S]*?@.*)\n/ ).join('%').gsub( /\n /, '').gsub( /%/, ">\n   " ).gsub( /:mailto:/i, " <" )
 part  = "   " + part + ">" if part != ""
