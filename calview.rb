@@ -134,8 +134,11 @@ if vcal.match( /^DTSTART;TZID=/ )
   etz = vcal[ /^DTEND;TZID=(.*):/, 1 ]
   stz = windows_tz[stz] or stz
   etz = windows_tz[etz] or etz
-  stz = TZInfo::Timezone.get(stz)
-  etz = TZInfo::Timezone.get(etz)
+  begin
+    stz = TZInfo::Timezone.get(stz)
+    etz = TZInfo::Timezone.get(etz)
+  rescue
+  end
 elsif vcal.match( /DTSTART;VALUE=DATE:/ )
   sdate = vcal[ /^DTSTART;VALUE=DATE:(.*)/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
   edate = vcal[ /^DTEND;VALUE=DATE:(.*)/, 1 ].sub( /(\d\d\d\d)(\d\d)(\d\d)/, '\1-\2-\3') 
