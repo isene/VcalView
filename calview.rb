@@ -208,7 +208,7 @@ sum   = vcal[ /^SUMMARY:(.*)/, 1 ] if sum == nil
 
 # Print the result in a tidy fashion
 puts "WHAT: " + (sum)
-puts "WHEN: " + (dates + " (" + wday + " of week " + week + "), " + times)
+puts "WHEN: " + (dates.to_s + " (" + wday.to_s + " of week " + week.to_s + "), " + times.to_s)
 puts ""
 puts "ORGANIZER: " + org
 puts "PARTICIPANTS:", part
