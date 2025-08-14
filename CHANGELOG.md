@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.1] - 2025-01-14
+
+### Fixed
+- Fixed time parsing for events with timezone information (now correctly handles HHMMSS format)
+- Fixed incorrect recurrence detection (RRULE from VTIMEZONE was being mistakenly applied to VEVENT)
+
 ## [2.0.0] - 2025-01-10
 
 ### Added

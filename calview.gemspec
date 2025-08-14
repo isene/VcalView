@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'calview'
-  s.version     = '2.0.0'
+  s.version     = '2.0.1'
   s.licenses    = ['Unlicense']
   s.summary     = "VCAL/iCalendar viewer for terminal and mutt with multiple output formats"
   s.description = "A robust VCAL/iCalendar viewer that parses calendar invites and displays them in a readable format. Perfect for mutt email client integration and terminal viewing. Features include timezone support, recurrence parsing, multiple output formats (text, JSON, compact), and comprehensive error handling. Originally created to replace vcal2text with a leaner Ruby solution."

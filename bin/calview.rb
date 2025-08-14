@@ -15,12 +15,12 @@ class VcalParser
   # Precompile all regex patterns for better performance
   PATTERNS = {
     multiline_attendee: /(^ATTENDEE.*)\n^ (.*)/,
-    dtstart_tzid: /^DTSTART;TZID=(.*?):(.*?)(?:T(\d{4}))?$/,
-    dtend_tzid: /^DTEND;TZID=(.*?):(.*?)(?:T(\d{4}))?$/,
+    dtstart_tzid: /^DTSTART;TZID=(.*?):(.*?)(?:T(\d{6}))?$/,
+    dtend_tzid: /^DTEND;TZID=(.*?):(.*?)(?:T(\d{6}))?$/,
     dtstart_date: /^DTSTART;VALUE=DATE:(.*)$/,
     dtend_date: /^DTEND;VALUE=DATE:(.*)$/,
-    dtstart_utc: /^DTSTART:(.*?)(?:T(\d{4}))?$/,
-    dtend_utc: /^DTEND:(.*?)(?:T(\d{4}))?$/,
+    dtstart_utc: /^DTSTART:(.*?)(?:T(\d{6}))?$/,
+    dtend_utc: /^DTEND:(.*?)(?:T(\d{6}))?$/,
     organizer_cn: /^ORGANIZER;CN=(.*)$/,
     organizer: /^ORGANIZER:(.*)$/,
     attendee: /^ATTENDEE.*CN=([\s\S]*?@.*)\n/,
@@ -284,6 +284,7 @@ class VcalParser
   def extract_time(time_str)
     return nil unless time_str
     # Direct string manipulation is faster than regex for fixed format
+    # Handle both 4-digit (HHMM) and 6-digit (HHMMSS) formats
     "#{time_str[0,2]}:#{time_str[2,2]}"
   end
 
@@ -388,7 +389,11 @@ class VcalParser
   end
 
   def parse_recurrence
-    match = @vcal.match(PATTERNS[:rrule])
+    # Only look for RRULE within the VEVENT section
+    vevent_section = @vcal[/BEGIN:VEVENT.*?END:VEVENT/m]
+    return unless vevent_section
+    
+    match = vevent_section.match(PATTERNS[:rrule])
     @event[:recurrence] = parse_rrule(match[1]) if match
   end
 
