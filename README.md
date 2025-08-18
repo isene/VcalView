@@ -1,5 +1,11 @@
 # VcalView
 
+[![Gem Version](https://badge.fury.io/rb/calview.svg)](https://badge.fury.io/rb/calview)
+[![Ruby](https://img.shields.io/badge/Ruby-CC342D?style=flat&logo=ruby&logoColor=white)](https://www.ruby-lang.org/)
+[![License](https://img.shields.io/badge/License-Public%20Domain-brightgreen.svg)](https://unlicense.org/)
+[![GitHub stars](https://img.shields.io/github/stars/isene/VcalView.svg)](https://github.com/isene/VcalView/stargazers)
+[![Stay Amazing](https://img.shields.io/badge/Stay-Amazing-blue.svg)](https://isene.org)
+
 A robust VCAL/iCalendar viewer for terminal and MUTT email client with multiple output formats.
 
 ## Features
