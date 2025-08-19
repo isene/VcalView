@@ -7,6 +7,7 @@
 [![Stay Amazing](https://img.shields.io/badge/Stay-Amazing-blue.svg)](https://isene.org)
 
 <img src="img/vcalview_logo.svg" align="left" width="150" height="150" alt="VcalView Logo">
+<br clear="left"/>
 
 A robust VCAL/iCalendar viewer for terminal and MUTT email client with multiple output formats.
 
