@@ -1,3 +1,5 @@
+<img src="img/vcalview_logo.svg" align="left" width="150" height="150" alt="VcalView Logo">
+
 # VcalView
 
 [![Gem Version](https://badge.fury.io/rb/calview.svg)](https://badge.fury.io/rb/calview)

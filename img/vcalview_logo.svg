@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="150" height="150" fill="#1a1f2e"/>
+  
+  <!-- Calendar icon -->
+  <g transform="translate(75, 65)">
+    <!-- Calendar body -->
+    <rect x="-40" y="-30" width="80" height="70" fill="#f9fafb" stroke="#e5e7eb" stroke-width="2" rx="4"/>
+    
+    <!-- Calendar header -->
+    <rect x="-40" y="-30" width="80" height="15" fill="#3b82f6" rx="4 4 0 0"/>
+    
+    <!-- Calendar rings -->
+    <circle cx="-25" cy="-30" r="3" fill="#1e293b"/>
+    <rect x="-27" y="-35" width="4" height="10" fill="#6b7280" rx="1"/>
+    <circle cx="25" cy="-30" r="3" fill="#1e293b"/>
+    <rect x="23" y="-35" width="4" height="10" fill="#6b7280" rx="1"/>
+    
+    <!-- Month text -->
+    <text x="0" y="-19" font-family="monospace" font-size="7" fill="#fff" text-anchor="middle" font-weight="bold">JANUARY</text>
+    
+    <!-- Calendar grid -->
+    <g stroke="#e5e7eb" stroke-width="0.5">
+      <!-- Horizontal lines -->
+      <line x1="-35" y1="-5" x2="35" y2="-5"/>
+      <line x1="-35" y1="5" x2="35" y2="5"/>
+      <line x1="-35" y1="15" x2="35" y2="15"/>
+      <line x1="-35" y1="25" x2="35" y2="25"/>
+      
+      <!-- Vertical lines -->
+      <line x1="-25" y1="-15" x2="-25" y2="35"/>
+      <line x1="-15" y1="-15" x2="-15" y2="35"/>
+      <line x1="-5" y1="-15" x2="-5" y2="35"/>
+      <line x1="5" y1="-15" x2="5" y2="35"/>
+      <line x1="15" y1="-15" x2="15" y2="35"/>
+      <line x1="25" y1="-15" x2="25" y2="35"/>
+    </g>
+    
+    <!-- Event markers -->
+    <circle cx="-20" cy="0" r="8" fill="#10b981" opacity="0.3">
+      <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="-20" y="3" font-family="monospace" font-size="6" fill="#374151" text-anchor="middle">15</text>
+    
+    <circle cx="10" cy="10" r="8" fill="#f59e0b" opacity="0.3">
+      <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2s" begin="0.5s" repeatCount="indefinite"/>
+    </circle>
+    <text x="10" y="13" font-family="monospace" font-size="6" fill="#374151" text-anchor="middle">22</text>
+    
+    <circle cx="-10" cy="20" r="8" fill="#ef4444" opacity="0.3">
+      <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2s" begin="1s" repeatCount="indefinite"/>
+    </circle>
+    <text x="-10" y="23" font-family="monospace" font-size="6" fill="#374151" text-anchor="middle">28</text>
+  </g>
+  
+  <!-- vCal/iCal format indicator -->
+  <g transform="translate(30, 30)" opacity="0.8">
+    <rect x="-15" y="-8" width="30" height="16" fill="#1e293b" stroke="#334155" stroke-width="1" rx="2"/>
+    <text x="0" y="-2" font-family="monospace" font-size="5" fill="#60a5fa" text-anchor="middle">.ics</text>
+    <text x="0" y="4" font-family="monospace" font-size="4" fill="#60a5fa" text-anchor="middle">vCal</text>
+  </g>
+  
+  <!-- Ruby gem indicator -->
+  <g transform="translate(120, 30)" opacity="0.8">
+    <polygon points="0,-5 4,-2.5 4,2.5 0,5 -4,2.5 -4,-2.5" fill="#dc2626" stroke="#991b1b" stroke-width="1"/>
+    <text x="0" y="12" font-family="monospace" font-size="4" fill="#dc2626" text-anchor="middle">Ruby</text>
+  </g>
+  
+  <!-- Event details popup -->
+  <g transform="translate(75, 110)" opacity="0.9">
+    <rect x="-45" y="0" width="90" height="25" fill="#1e293b" stroke="#334155" stroke-width="1" rx="3"/>
+    
+    <g font-family="monospace" font-size="4" fill="#94a3b8">
+      <text x="-42" y="6">Event: Team Meeting</text>
+      <text x="-42" y="11">Time: 10:00 - 11:00</text>
+      <text x="-42" y="16">Location: Conference Room</text>
+      <text x="-42" y="21" fill="#10b981">Status: Confirmed</text>
+    </g>
+  </g>
+  
+  <!-- Text -->
+  <text x="75" y="140" font-family="monospace" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">VcalView</text>
+  <text x="75" y="150" font-family="monospace" font-size="7" fill="#94a3b8" text-anchor="middle">Calendar Event Viewer</text>
+</svg>
