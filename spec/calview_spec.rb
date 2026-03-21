@@ -160,14 +160,18 @@ RSpec.describe VcalParser do
     end
 
     context 'with invalid input' do
-      it 'returns nil for empty input' do
+      it 'returns error hash for empty input' do
         parser = VcalParser.new('')
-        expect(parser.parse).to be_nil
+        result = parser.parse
+        expect(result).to be_a(Hash)
+        expect(result[:error]).to include('Not a valid iCalendar file')
       end
 
-      it 'returns nil for non-VCAL input' do
+      it 'returns error hash for non-VCAL input' do
         parser = VcalParser.new('This is not a VCAL file')
-        expect(parser.parse).to be_nil
+        result = parser.parse
+        expect(result).to be_a(Hash)
+        expect(result[:error]).to include('Not a valid iCalendar file')
       end
     end
   end

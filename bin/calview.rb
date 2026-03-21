@@ -155,11 +155,14 @@ class VcalParser
   end
 
   def parse
-    return nil unless valid_vcal?
-    
+    unless valid_vcal?
+      @event[:error] = "Not a valid iCalendar file (missing BEGIN:VCALENDAR or BEGIN:VEVENT)"
+      return @event
+    end
+
     # Fix multiline participants (single gsub operation)
     @vcal.gsub!(PATTERNS[:multiline_attendee], '\1\2')
-    
+
     # Parse in most likely order of appearance
     parse_summary
     parse_dates_and_times
@@ -171,7 +174,7 @@ class VcalParser
     parse_recurrence
     parse_status
     parse_priority
-    
+
     @event
   end
 
@@ -206,11 +209,11 @@ class VcalParser
 
   def parse_timezone_dates_fast(start_match)
     load_tzinfo
-    
+
     stz_name = start_match[1]
     sdate = extract_date(start_match[2])
     stime = start_match[3] ? extract_time(start_match[3]) : nil
-    
+
     end_match = @vcal.match(PATTERNS[:dtend_tzid])
     if end_match
       etz_name = end_match[1]
@@ -221,11 +224,15 @@ class VcalParser
       edate = sdate
       etime = stime
     end
-    
+
+    # Store timezone identifier for display
+    resolved = WINDOWS_TZ[stz_name] || stz_name
+    @event[:timezone] = resolved
+
     if @tzinfo_loaded && stime && etime
       stz = convert_timezone(stz_name)
       etz = convert_timezone(etz_name)
-      
+
       if stz && etz
         begin
           stime = stz.local_to_utc(Time.parse("#{sdate} #{stime}")).localtime
@@ -235,7 +242,7 @@ class VcalParser
         end
       end
     end
-    
+
     store_date_time_info(sdate, edate, stime, etime)
   end
 
@@ -461,7 +468,12 @@ class CalendarViewer
 
   def display(event)
     return puts "Error: Invalid or empty calendar file" unless event
-    
+
+    if event[:error]
+      STDERR.puts "Error: #{event[:error]}"
+      exit 1
+    end
+
     case @format
     when :json
       display_json(event)
@@ -486,7 +498,8 @@ class CalendarViewer
       time_info += ", #{event[:times]}" if event[:times]
       output << "WHEN: #{time_info}"
     end
-    
+
+    output << "TIMEZONE: #{event[:timezone]}" if event[:timezone]
     output << "WHERE: #{event[:location]}" if event[:location] && !event[:location].empty?
     output << "RECURRENCE: #{event[:recurrence]}" if event[:recurrence]
     output << "STATUS: #{event[:status]}" if event[:status]
@@ -552,12 +565,24 @@ if __FILE__ == $0
   
   begin
     vcal_content = ARGF.read
+  rescue Errno::ENOENT => e
+    STDERR.puts "Error: File not found: #{e.message}"
+    exit 1
+  rescue Errno::EACCES => e
+    STDERR.puts "Error: Permission denied: #{e.message}"
+    exit 1
+  rescue => e
+    STDERR.puts "Error reading input: #{e.message}"
+    exit 1
+  end
+
+  begin
     parser = VcalParser.new(vcal_content)
     event = parser.parse
     viewer = CalendarViewer.new(options)
     viewer.display(event)
   rescue => e
-    STDERR.puts "Error: #{e.message}"
+    STDERR.puts "Error parsing calendar data: #{e.message}"
     exit 1
   end
 end
